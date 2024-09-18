@@ -38,8 +38,17 @@ class Hand:
 
         return suits
 
-    def check_pair(self):
-        pass
+    def get_counter_dict(self):
+        return dict(Counter(self.get_values()))
+
+    def count_checker(self, checked_count):
+        counter = self.get_counter_dict()
+
+        for count in counter.values():
+            if count == checked_count:
+                return True
+
+        return False
 
     def check_straight(self):
         if self.get_values() == [2, 3, 4, 5, "A"]:
@@ -63,13 +72,10 @@ class Hand:
         return self.check_flush() and self.get_values() == [10, "J", "Q", "K", "A"]
 
     def check_four_of_a_kind(self):
-        counter = dict(Counter(self.get_values()))
+        return self.count_checker(4)
 
-        for count in counter.values():
-            if count == 4:
-                return True
-
-        return False
+    def check_full_house(self):
+        pass
 
     def hand_value(self):
         self.cards.sort()
