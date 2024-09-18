@@ -15,24 +15,39 @@ class Hand:
 
         return values
 
-    def get_suites(self):
-        suites = []
+    def get_suits(self):
+        suits = []
         for card in self.cards:
-            suites.append(card.suit)
+            suits.append(card.suit)
 
-        return suites
+        return suits
 
-    def hand_value(self):
-        values = self.get_values()
-        suites = self.get_suites()
-
+    def sort_hand(self):
+        pass
 
     def check_pair(self):
         pass
 
-    def check_straight(self):
+    @staticmethod
+    def check_straight(values):
         pass
 
-    def check_flush(self):
-        pass
+    @staticmethod
+    def check_flush(suits):
+        if len(list(set(suits))) == 1:
+            return True
+        else:
+            return False
+
+    def hand_value(self):
+        values = self.get_values()
+        suits = self.get_suits()
+
+        if self.check_flush(suits):
+            return "flush"
+
+        if self.check_straight(values):
+            return "straight"
+
+
 
