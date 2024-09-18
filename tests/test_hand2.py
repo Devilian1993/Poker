@@ -1,6 +1,7 @@
 import unittest
 from backend.hand import Hand
 from backend.card import Card
+from backend.deck import Deck
 
 class TestHand(unittest.TestCase):
     def setUp(self):
@@ -81,6 +82,24 @@ class TestHand(unittest.TestCase):
 
     def test_royal_flush_vs_straight_flush(self):
         self.assertTrue(self.royal_flush > self.straight_flush)
+    def test_straight_flush_vs_four_of_a_kind(self):
+        self.assertTrue(self.straight_flush > self.four_of_a_kind)
+    def test_four_of_a_kind_vs_full_house(self):
+        self.assertTrue(self.four_of_a_kind > self.full_house)
+    def test_full_house_vs_straight(self):
+        self.assertTrue(self.full_house > self.straight)
+    def test_straight_vs_three_of_a_kind(self):
+        self.assertTrue(self.straight > self.three_of_a_kind)
+    def test_three_of_a_kind_vs_two_pairs(self):
+        self.assertTrue(self.three_of_a_kind > self.two_pairs)
+    def test_two_pairs_vs_pair(self):
+        self.assertTrue(self.two_pairs > self.pair)
+    def test_pair_vs_high_card(self):
+        self.assertTrue(self.pair > self.high_card)
+
+# RANDOMOWE DWIE TALIE
+        #
+
 
 if __name__ == '__main__':
     unittest.main()
