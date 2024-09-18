@@ -38,13 +38,15 @@ class Hand:
         pass
 
     def check_straight(self):
+        if self.get_values() == [2, 3, 4, 5, "A"]:
+            return True
         for i, card in enumerate(self.cards[:3]):
             if card.next_card() != self.cards[i+1]:
                 return False
         return True
 
-    @staticmethod
-    def check_flush(suits):
+    def check_flush(self):
+        suits = self.get_suits()
         if len(list(set(suits))) == 1:
             return True
         else:
@@ -53,10 +55,14 @@ class Hand:
     def hand_value(self):
         self.cards.sort()
         values = self.get_values()
-        suits = self.get_suits()
 
+        if self.check_flush() and self.check_straight():
+            if values == [10, "J", "Q", "K", "A"]:
+                return "royal flush"
+            else:
+                return "straight flush"
 
-        if self.check_flush(suits):
+        if self.check_flush():
             return "flush"
 
         if self.check_straight():
