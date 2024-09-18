@@ -21,4 +21,4 @@ class Card:
             elif self.value == "K":
                 return "A"
             else:
-                return None
+                return 2
