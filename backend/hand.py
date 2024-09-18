@@ -1,4 +1,16 @@
 #High card, pair, two pairs, three of a kind, straight, flush, full house, four of a kind, straight flush, royal flush
+from card import Card
+UTIL_HAND_RANKS = {"high card": 0,
+            "pair": 1,
+            "two pair": 2,
+            "three of a kind": 3,
+            "straight": 4,
+            "flush": 5,
+            "full house": 6,
+            "four of a kind": 7,
+            "straight flush": 8,
+            "royal flush": 9
+        }
 
 class Hand:
 
@@ -22,9 +34,6 @@ class Hand:
 
         return suits
 
-    def sort_hand(self):
-        pass
-
     def check_pair(self):
         pass
 
@@ -40,8 +49,10 @@ class Hand:
             return False
 
     def hand_value(self):
+        self.cards.sort()
         values = self.get_values()
         suits = self.get_suits()
+
 
         if self.check_flush(suits):
             return "flush"
@@ -49,5 +60,13 @@ class Hand:
         if self.check_straight(values):
             return "straight"
 
+    def __lt__(self, other):
+        return UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]
+
+    def __eq__(self, other):
+        return UTIL_HAND_RANKS[self.hand_value()] == UTIL_HAND_RANKS[other.hand_value()]
+
+    def __gt__(self, other):
+        return UTIL_HAND_RANKS[self.hand_value()] > UTIL_HAND_RANKS[other.hand_value()]
 
 
