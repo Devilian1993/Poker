@@ -1,5 +1,5 @@
 #High card, pair, two pairs, three of a kind, straight, flush, full house, four of a kind, straight flush, royal flush
-from card import Card
+#from card import Card
 UTIL_HAND_RANKS = {"high card": 0,
             "pair": 1,
             "two pair": 2,
@@ -37,9 +37,11 @@ class Hand:
     def check_pair(self):
         pass
 
-    @staticmethod
-    def check_straight(values):
-        pass
+    def check_straight(self):
+        for i, card in enumerate(self.cards[:3]):
+            if card.next_card() != self.cards[i+1]:
+                return False
+        return True
 
     @staticmethod
     def check_flush(suits):
@@ -57,7 +59,7 @@ class Hand:
         if self.check_flush(suits):
             return "flush"
 
-        if self.check_straight(values):
+        if self.check_straight():
             return "straight"
 
     def __lt__(self, other):
@@ -69,4 +71,6 @@ class Hand:
     def __gt__(self, other):
         return UTIL_HAND_RANKS[self.hand_value()] > UTIL_HAND_RANKS[other.hand_value()]
 
-
+#cards = [Card("Hearts", 2), Card("Spades", 5), Card("Diamonds", 2), Card("Clubs", 5), Card("Hearts", "J")]
+#hand = Hand(cards)
+#print(hand.cards[0].next_card())
