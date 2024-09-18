@@ -23,8 +23,7 @@ class Card:
                 return Card(self.suit, "K")
             elif self.value == "K":
                 return Card(self.suit, "A")
-            else:
-                return Card(self.suit, "2")
+
 
     def __lt__(self, other):
         return UTIL_CARD_VALUES[self.value] < UTIL_CARD_VALUES[other.value]
