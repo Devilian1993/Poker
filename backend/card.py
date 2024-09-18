@@ -13,18 +13,18 @@ class Card:
     def next_card(self):
         if isinstance(self.value, int):
             if self.value == 10:
-                return "J"
+                return Card(self.suit, "J")
             else:
-                return self.value + 1
+                return Card(self.suit, self.value + 1)
         else:
             if self.value == "J":
-                return "Q"
+                Card(self.suit, "Q")
             elif self.value == "Q":
-                return "K"
+                Card(self.suit, "K")
             elif self.value == "K":
-                return "A"
+                Card(self.suit, "A")
             else:
-                return 2
+                return Card(self.suit, "2")
 
     def __lt__(self, other):
         return UTIL_CARD_VALUES[self.value] < UTIL_CARD_VALUES[other.value]
