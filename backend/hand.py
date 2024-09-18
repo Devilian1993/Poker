@@ -1,5 +1,9 @@
 #High card, pair, two pairs, three of a kind, straight, flush, full house, four of a kind, straight flush, royal flush
 #from card import Card
+
+from collections import Counter
+
+
 UTIL_HAND_RANKS = {"high card": 0,
             "pair": 1,
             "two pair": 2,
@@ -58,10 +62,17 @@ class Hand:
     def check_royal_flush(self):
         return self.check_flush() and self.get_values() == [10, "J", "Q", "K", "A"]
 
+    def check_four_of_a_kind(self):
+        counter = dict(Counter(self.get_values()))
+
+        for count in counter.values():
+            if count == 4:
+                return True
+
+        return False
 
     def hand_value(self):
         self.cards.sort()
-        values = self.get_values()
 
         if self.check_royal_flush():
             return "royal flush"
@@ -74,6 +85,9 @@ class Hand:
 
         if self.check_straight():
             return "straight"
+
+        if self.check_four_of_a_kind():
+            return "four of a kind"
 
     def __lt__(self, other):
         return UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]
