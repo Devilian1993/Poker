@@ -77,6 +77,15 @@ class Hand:
     def check_full_house(self):
         pass
 
+    def check_three_of_a_kind(self):
+        return self.count_checker(3)
+
+    def check_two_pairs(self):
+        pass
+
+    def check_pair(self):
+        return self.count_checker(2)
+
     def hand_value(self):
         self.cards.sort()
 
@@ -86,14 +95,28 @@ class Hand:
         if self.check_straight_flush():
             return "straight flush"
 
+        if self.check_four_of_a_kind():
+            return "four of a kind"
+
+        if self.check_full_house():
+            return "full house"
+
         if self.check_flush():
             return "flush"
 
         if self.check_straight():
             return "straight"
 
-        if self.check_four_of_a_kind():
-            return "four of a kind"
+        if self.check_three_of_a_kind():
+            return "three of a kind"
+
+        if self.check_two_pairs():
+            return "two pairs"
+
+        if self.check_pair():
+            return "pair"
+
+        return "high card"
 
     def __lt__(self, other):
         return UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]
