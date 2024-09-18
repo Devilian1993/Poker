@@ -18,11 +18,11 @@ class Card:
                 return Card(self.suit, self.value + 1)
         else:
             if self.value == "J":
-                Card(self.suit, "Q")
+                return Card(self.suit, "Q")
             elif self.value == "Q":
-                Card(self.suit, "K")
+                return Card(self.suit, "K")
             elif self.value == "K":
-                Card(self.suit, "A")
+                return Card(self.suit, "A")
             else:
                 return Card(self.suit, "2")
 
