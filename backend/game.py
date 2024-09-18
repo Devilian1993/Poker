@@ -14,7 +14,7 @@ class PokerGame:
         random.shuffle(self.deck.deck)
 
         for player in self.players:
-            player.hand = [self.deck.deck.pop(), self.deck.deck.pop()]
+            player.personal_cards = [self.deck.deck.pop(), self.deck.deck.pop()]
 
     def flop(self):
         for i in range(3):
