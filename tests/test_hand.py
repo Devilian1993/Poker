@@ -69,6 +69,10 @@ class TestHand(unittest.TestCase):
         hand = Hand(cards)
         self.assertEqual(hand.get_values(), [2, 4, 7, 9, "J"])
 
+    def test_get_suites(self):
+        cards = [Card("Hearts", 2), Card("Diamonds", 2), Card("Spades", 2), Card("Clubs", 2), Card("Hearts", 5)]
+        hand = Hand(cards)
+        self.assertEqual(hand.get_suites(), ["Hearts", "Diamonds", "Spades", "Clubs", "Hearts"])
 
 if __name__ == "__main__":
     unittest.main()

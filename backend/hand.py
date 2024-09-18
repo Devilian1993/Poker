@@ -15,9 +15,17 @@ class Hand:
 
         return values
 
+    def get_suites(self):
+        suites = []
+        for card in self.cards:
+            suites.append(card.suit)
+
+        return suites
+
     def hand_value(self):
         values = self.get_values()
-        
+        suites = self.get_suites()
+
 
     def check_pair(self):
         pass
