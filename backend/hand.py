@@ -52,15 +52,22 @@ class Hand:
         else:
             return False
 
+    def check_straight_flush(self):
+        return self.check_flush() and self.check_straight()
+
+    def check_royal_flush(self):
+        return self.check_flush() and self.get_values() == [10, "J", "Q", "K", "A"]
+
+
     def hand_value(self):
         self.cards.sort()
         values = self.get_values()
 
-        if self.check_flush() and self.check_straight():
-            if values == [10, "J", "Q", "K", "A"]:
-                return "royal flush"
-            else:
-                return "straight flush"
+        if self.check_royal_flush():
+            return "royal flush"
+
+        if self.check_straight_flush():
+            return "straight flush"
 
         if self.check_flush():
             return "flush"
