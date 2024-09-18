@@ -75,13 +75,32 @@ class Hand:
         return self.count_checker(4)
 
     def check_full_house(self):
-        pass
+        if self.check_three_of_a_kind():
+            counter = self.get_counter_dict()
+
+            for count in counter.values():
+                if count == 2:
+                    return True
+
+        return False
 
     def check_three_of_a_kind(self):
         return self.count_checker(3)
 
     def check_two_pairs(self):
-        pass
+        if self.check_pair():
+            counter = self.get_counter_dict()
+
+            for card, count in counter.items():
+                if count == 2:
+                    counter.pop(card)
+                    break
+
+            for count in counter.values():
+                if count == 2:
+                    return True
+
+        return False
 
     def check_pair(self):
         return self.count_checker(2)

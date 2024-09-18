@@ -14,10 +14,10 @@ class TestHand(unittest.TestCase):
         hand = Hand(cards)
         self.assertEqual(hand.hand_value(), "pair")
 
-    def test_two_pair(self):
+    def test_two_pairs(self):
         cards = [Card("Hearts", 2), Card("Spades", 5), Card("Diamonds", 2), Card("Clubs", 5), Card("Hearts", "J")]
         hand = Hand(cards)
-        self.assertEqual(hand.hand_value(), "two pair")
+        self.assertEqual(hand.hand_value(), "two pairs")
 
     def test_three_of_a_kind(self):
         cards = [Card("Hearts", 2), Card("Diamonds", 2), Card("Clubs", 5), Card("Spades", 2), Card("Hearts", "J")]
