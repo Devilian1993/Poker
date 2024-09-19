@@ -39,9 +39,11 @@ class Hand:
     def get_card_with_count(self, count):
         counter = self.get_counter_dict()
 
-        for card, card_count in counter.items():
+        for card_value, card_count in counter.items():
             if card_count == count:
-                return card
+                for card in self.cards:
+                    if card.value == card_value:
+                        return card
 
     def get_counter_dict(self):
         return dict(Counter(self.get_values()))
