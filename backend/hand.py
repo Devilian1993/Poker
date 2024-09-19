@@ -163,3 +163,4 @@ class Hand:
 #cards = [Card("Hearts", 2), Card("Spades", 5), Card("Diamonds", 2), Card("Clubs", 5), Card("Hearts", "J")]
 #hand = Hand(cards)
 #print(hand.cards[0].next_card())
+

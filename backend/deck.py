@@ -1,5 +1,8 @@
 import random
 from backend.card import Card
+from backend.hand import Hand
+
+
 
 class Deck:
 
@@ -17,6 +20,6 @@ class Deck:
         return random.sample(self.deck, n)
 
 #deck = Deck()
-#random_cards = deck.generate_random_cards(53)
+#random_cards = deck.generate_random_cards(5)
 #for card in random_cards:
 #    print(card)
