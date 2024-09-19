@@ -163,19 +163,12 @@ class TestHandCompareDefault(unittest.TestCase):
     def test_pair_vs_high_card(self):
         self.assertTrue(self.pair > self.high_card)
 
-def fixer(cards):
-    for card in cards:
-        if isinstance(card.value, str) and card.value.isdigit():
-            card.value = int(card.value)
-    return cards
-
-
 class TestRandomHandCompare(unittest.TestCase):
     def test_compare_two_random_hands(self):
         deck = Deck()
         for i in range(10):
-            first_hand = Hand(fixer(deck.generate_random_cards(5)))
-            second_hand = Hand(fixer(deck.generate_random_cards(5)))
+            first_hand = Hand(deck.generate_random_cards(5))
+            second_hand = Hand(deck.generate_random_cards(5))
             self.assertNotEqual(first_hand, second_hand, "hand1 = hand2")    ### TO WYKURWIA ERROR ALE DLATEGO, ŻE JESZCZENIE POROWNUJE KTORY ''TEN SAM'' UKLAD JEST SILNIEJSZY
             if first_hand > second_hand:
                 self.assertTrue(first_hand > second_hand, "Error. First hand should be better than second hand. (THERE : first_hand < second_hand)")
