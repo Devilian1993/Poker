@@ -137,14 +137,28 @@ class Hand:
 
         return "high card"
 
+#dla straight flusha, flusha, straighta, high card sprawdzamy najwyższą karte
+#dla four of a kind, three of a kind, pair sprawdzamy najwyższą parę i potem najwyższą kartę nie do pary
+#dla full house sprawdzamy najwyższą trojke, nastepnie sprawdzamy najwyzsza pare
+#dla two pairs sprawdzamy najwyższą pare, potem porównujemy drugą pare, potem sprawdzamy najwyższą karte
+
     def __lt__(self, other):
-        return UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]
+        if UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]:
+            return UTIL_HAND_RANKS[self.hand_value()] < UTIL_HAND_RANKS[other.hand_value()]
+        else:
+            pass
 
     def __eq__(self, other):
-        return UTIL_HAND_RANKS[self.hand_value()] == UTIL_HAND_RANKS[other.hand_value()]
+        if UTIL_HAND_RANKS[self.hand_value()] == UTIL_HAND_RANKS[other.hand_value()]:
+            return UTIL_HAND_RANKS[self.hand_value()] == UTIL_HAND_RANKS[other.hand_value()]
+        else:
+            pass
 
     def __gt__(self, other):
-        return UTIL_HAND_RANKS[self.hand_value()] > UTIL_HAND_RANKS[other.hand_value()]
+        if UTIL_HAND_RANKS[self.hand_value()] > UTIL_HAND_RANKS[other.hand_value()]:
+            return UTIL_HAND_RANKS[self.hand_value()] > UTIL_HAND_RANKS[other.hand_value()]
+        else:
+            pass
 
 #cards = [Card("Hearts", 2), Card("Spades", 5), Card("Diamonds", 2), Card("Clubs", 5), Card("Hearts", "J")]
 #hand = Hand(cards)
