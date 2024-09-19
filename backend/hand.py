@@ -67,7 +67,7 @@ class Hand:
     def check_straight(self):
         if self.get_values() == [2, 3, 4, 5, "A"]:
             return True
-        for i, card in enumerate(self.cards[:3]):
+        for i, card in enumerate(self.cards[:4]):
             if card.next_card() != self.cards[i + 1]:
                 return False
         return True
@@ -167,13 +167,16 @@ class Hand:
                 if card1 != card2:
                     return False
             elif comparison_mode == "gt":
-                if card1 <= card2:
-                    return False
+                if card1 > card2:
+                    return True
             elif comparison_mode == "lt":
-                if card1 >= card2:
+                if card1 < card2:
                     return False
-
-        return True
+        else:
+            if comparison_mode == "eq":
+                return True
+            else:
+                return False
 
     def __lt__(self, other):
         # Podstawowe sprawdzenie, jeżeli są różne układy to od razu zwraca True/False bo nie ma potrzeby dokładnie sprawdzać
