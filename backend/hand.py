@@ -172,7 +172,7 @@ class Hand:
                     return True
             elif comparison_mode == "lt":
                 if card1 < card2:
-                    return False
+                    return True
         else:
             if comparison_mode == "eq":
                 return True

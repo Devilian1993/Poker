@@ -207,6 +207,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Hearts', 'A')])  # Four eights, ace kicker
         hand3 = Hand([Card('Hearts', 9), Card('Diamonds', 9), Card('Clubs', 9), Card('Spades', 9),
                       Card('Hearts', 'K')])  # Same hand as hand1
+        hand4 = Hand([Card('Hearts', 9), Card('Diamonds', 9), Card('Clubs', 9), Card('Spades', 9),
+                      Card('Hearts', 'A')]) # Four nines, ace kicker
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -215,6 +217,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertTrue(hand1 == hand3)
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
+
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
 
     def test_full_house_vs_full_house(self):
         hand1 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'K'), Card('Clubs', 'K'), Card('Hearts', 9),
@@ -223,6 +229,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Diamonds', 10)])  # Full house, queens over tens
         hand3 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'K'), Card('Clubs', 'K'), Card('Spades', 9),
                       Card('Clubs', 9)])  # Same as hand1
+        hand4 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'K'), Card('Clubs', 'K'), Card('Hearts', 10),
+                      Card('Diamonds', 10)]) # Full house, kings over tens
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -232,13 +240,19 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
 
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
+
     def test_flush_vs_flush(self):
         hand1 = Hand([Card('Hearts', 2), Card('Hearts', 4), Card('Hearts', 6), Card('Hearts', 8),
-                      Card('Hearts', 10)])  # Flush with 10 high
+                      Card('Hearts', 10)])  # Flush with 10 high then 8
         hand2 = Hand([Card('Spades', 3), Card('Spades', 5), Card('Spades', 7), Card('Spades', 9),
                       Card('Spades', 'J')])  # Flush with jack high
         hand3 = Hand([Card('Diamonds', 2), Card('Diamonds', 4), Card('Diamonds', 6), Card('Diamonds', 8),
                       Card('Diamonds', 10)])  # Same flush as hand1
+        hand4 = Hand([Card('Hearts', 2), Card('Hearts', 4), Card('Hearts', 6), Card('Hearts', 9),
+                      Card('Hearts', 10)]) # Flush with 10 high then 9
 
         self.assertTrue(hand2 > hand1)
         self.assertFalse(hand2 < hand1)
@@ -248,6 +262,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
 
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
+
     def test_straight_vs_straight(self):
         hand1 = Hand([Card('Hearts', 5), Card('Diamonds', 6), Card('Clubs', 7), Card('Spades', 8),
                       Card('Hearts', 9)])  # Straight 9 high
@@ -255,6 +273,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Hearts', 8)])  # Straight 8 high
         hand3 = Hand([Card('Diamonds', 5), Card('Clubs', 6), Card('Spades', 7), Card('Hearts', 8),
                       Card('Diamonds', 9)])  # Same straight as hand1
+        hand4 = Hand([Card('Hearts', 5), Card('Diamonds', 4), Card('Clubs', 3), Card('Spades', 2),
+                      Card('Hearts', "A")])
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -263,6 +283,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertTrue(hand1 == hand3)
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
+
+        self.assertTrue(hand1 > hand4)
+        self.assertFalse(hand1 < hand4)
+        self.assertFalse(hand1 == hand4)
 
     def test_three_of_a_kind_vs_three_of_a_kind(self):
         hand1 = Hand([Card('Hearts', 7), Card('Diamonds', 7), Card('Clubs', 7), Card('Hearts', 10),
@@ -271,6 +295,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Diamonds', 'Q')])  # Three 6s, queen kicker
         hand3 = Hand([Card('Clubs', 7), Card('Spades', 7), Card('Diamonds', 7), Card('Clubs', 10),
                       Card('Spades', 'J')])  # Same hand as hand1
+        hand4 = Hand([Card('Hearts', 7), Card('Diamonds', 7), Card('Clubs', 7), Card('Hearts', 10),
+                      Card('Diamonds', 'Q')])  # Three 7s, queen kicker
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -279,6 +305,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertTrue(hand1 == hand3)
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
+
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
 
     def test_two_pairs_vs_two_pairs(self):
         hand1 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'K'), Card('Clubs', 10), Card('Spades', 10),
@@ -287,6 +317,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Hearts', 2)])  # Two pairs (queens and nines), 2 kicker
         hand3 = Hand([Card('Clubs', 'K'), Card('Spades', 'K'), Card('Diamonds', 10), Card('Hearts', 10),
                       Card('Diamonds', 3)])  # Same hand as hand1
+        hand4 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'K'), Card('Clubs', 10), Card('Spades', 10),
+                      Card('Hearts', 2)])  # Two pairs (kings and tens), 2 kicker
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -296,13 +328,19 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
 
+        self.assertFalse(hand1 == hand4)
+        self.assertTrue(hand1 > hand4)
+        self.assertFalse(hand1 < hand4)
+
     def test_pair_vs_pair(self):
         hand1 = Hand([Card('Hearts', 'J'), Card('Diamonds', 'J'), Card('Clubs', 9), Card('Spades', 8),
-                      Card('Hearts', 2)])  # Pair of jacks
+                      Card('Hearts', 2)])  # Pair of jacks last 2
         hand2 = Hand([Card('Hearts', 10), Card('Diamonds', 10), Card('Clubs', 7), Card('Spades', 6),
                       Card('Hearts', 3)])  # Pair of tens
         hand3 = Hand([Card('Clubs', 'J'), Card('Spades', 'J'), Card('Hearts', 9), Card('Diamonds', 8),
                       Card('Clubs', 2)])  # Same hand as hand1
+        hand4 = Hand([Card('Hearts', 'J'), Card('Diamonds', 'J'), Card('Clubs', 9), Card('Spades', 8),
+                      Card('Hearts', 3)])  # Pair of jacks last 3
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -311,6 +349,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertTrue(hand1 == hand3)
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
+
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
 
     def test_high_card_vs_high_card(self):
         hand1 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'J'), Card('Clubs', 9), Card('Spades', 8),
@@ -319,6 +361,8 @@ class TestHandCompareDefault(unittest.TestCase):
                       Card('Hearts', 7)])  # Queen-high
         hand3 = Hand([Card('Diamonds', 'K'), Card('Spades', 'J'), Card('Clubs', 9), Card('Hearts', 8),
                       Card('Diamonds', 7)])  # Same hand as hand1
+        hand4 = Hand([Card('Hearts', 'K'), Card('Diamonds', 'Q'), Card('Clubs', 9), Card('Spades', 8),
+                      Card('Hearts', 7)])  # King-high then Q
 
         self.assertTrue(hand1 > hand2)
         self.assertFalse(hand1 < hand2)
@@ -327,6 +371,10 @@ class TestHandCompareDefault(unittest.TestCase):
         self.assertTrue(hand1 == hand3)
         self.assertFalse(hand1 > hand3)
         self.assertFalse(hand1 < hand3)
+
+        self.assertFalse(hand1 == hand4)
+        self.assertFalse(hand1 > hand4)
+        self.assertTrue(hand1 < hand4)
 
 
 class TestRandomHandCompare(unittest.TestCase):
