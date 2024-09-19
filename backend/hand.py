@@ -1,6 +1,3 @@
-# High card, pair, two pairs, three of a kind, straight, flush, full house, four of a kind, straight flush, royal flush
-# from card import Card
-
 from collections import Counter
 from card import UTIL_CARD_VALUES
 
