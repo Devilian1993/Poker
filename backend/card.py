@@ -29,7 +29,22 @@ class Card:
         return UTIL_CARD_VALUES[self.value] < UTIL_CARD_VALUES[other.value]
 
     def __eq__(self, other):
-        return UTIL_CARD_VALUES[self.value] == UTIL_CARD_VALUES[other.value]
+        if other is None:
+            return False
+        else:
+            return UTIL_CARD_VALUES[self.value] == UTIL_CARD_VALUES[other.value]
 
     def __gt__(self, other):
         return UTIL_CARD_VALUES[self.value] > UTIL_CARD_VALUES[other.value]
+
+    def __ge__(self, other):
+        if other is None:
+            return False
+        else:
+            return UTIL_CARD_VALUES[self.value] >= UTIL_CARD_VALUES[other.value]
+
+    def __le__(self, other):
+        if other is None:
+            return False
+        else:
+            return UTIL_CARD_VALUES[self.value] <= UTIL_CARD_VALUES[other.value]
