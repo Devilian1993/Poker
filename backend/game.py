@@ -26,5 +26,5 @@ class PokerGame:
     def river(self):
         self.common_cards.append(self.deck.deck.pop())
 
-game = PokerGame([Player("V", 1000), Player("Geralt", 1000)])
+#game = PokerGame([Player("V", 1000), Player("Geralt", 1000)])
 
