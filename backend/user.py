@@ -1,8 +1,9 @@
 # import UI
-
+import time
 class User:
 
     taken_usernames = set()   # przechowuje zajete nazwy uzytkownikow
+    logged_user = None ## aktualnie zalogowany uzytkownik. potrzebne przy odnoszeniu sie do niego
 
     def __init__(self, username, balance, email, password, phone_number):
         self.username = username
@@ -58,7 +59,12 @@ class User:
                         user_found = True
                         if parts[1] == password:
                             print("Login successful")
-                            return   # Tu zrobie potem zeby po zalogowaniu pokazywalo dostepne opcje
+                            cls.logged_user = cls(username = username,
+                                                  balance = int(parts[4]),  ### PO ZALOGOWAIU AKTUALIZUJE ZALOGOWANY USERA, a wlasciwie jego dane.
+                                                  email = parts[2],         ### NASTEPNIE PRZEKAZUJE INFORMACE O NIM DO GET_CURRENT_USER_ABOUT (metoda z której można pobierac dane)
+                                                  password = parts[1],
+                                                  phone_number = parts[3])
+                            cls.options()   # Pokazuje opcje po zalogowaniu.
                         else:
                             print("Invalid password. Please try again.")
                             break   # break dla for'a. While podtrzymany dopoki nie wprowadzi sie poprawnego hasla.
@@ -108,6 +114,60 @@ class User:
             # zapisuje do pliku w powyzszym formacie
             # username, haslo, mail, numer telefonu, defaultowy balans (500)
 
-        print("Registration succesful") # komunikat #
+        print("Registration succesful. Try to log in.") # komunikat #
+        cls.login()
+
+    @classmethod
+    def get_current_user_about(cls):
+        if cls.logged_user:
+            print(f"Your username : {cls.logged_user.username}")
+            print(f"Your balance: {cls.logged_user.balance}")
+            print(f"Email: {cls.logged_user.email}")
+            print(f"Phone number: {cls.logged_user.phone_number}")
+        else:
+            print("No user currently logged in")
 
 
+
+
+
+    @classmethod
+    def options(cls):                   ### metoda pokazuje dostepne opcja
+        if cls.logged_user:
+            print(f"Hello, {cls.logged_user.username}. Your current balance is {cls.logged_user.balance}.")
+            while True:
+                print(f"Available actions: ")
+                print(f"1. Training with bots")
+                print(f"2. Find lobby")
+                print(f"3. Rules")
+                print(f"4. Poker hands")
+                print(f"5. Credits")
+                print(f"6. My data")
+                print(f"7. Past games")
+                opt = input("What would you like to do? : ")
+                if opt == "1":
+                    pass# PRZEKIEROWANIE DO USTAWIEŃ JAK POZIOM TRUDNOSCI BOTÓW, ILOSC ROZDAN, BUDŻET, HANDICUP (jebać)
+                    break
+                if opt == "2":
+                    for i in range(3):
+                        print("Searching for a game")
+                        time.sleep(0.5)
+                        print("Searching for a game . ")
+                        time.sleep(0.5)
+                        print("Searching for a game . .")
+                        time.sleep(0.5)
+                        print("Searching for a game . . .")
+                        time.sleep(1.5)
+                    print("No game found ...")
+                    break
+                if opt == "6":
+                    cls.get_current_user_about()
+                else:
+                    print("Available actions : ")
+                    print(f"1. Training with bots")
+                    print(f"2. Find lobby")
+                    print(f"3. Rules")
+                    print(f"4. Poker hands")
+                    print(f"5. Credits")
+                    print(f"6. My data")
+                    print(f"7. Past games")
