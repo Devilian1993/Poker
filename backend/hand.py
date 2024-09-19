@@ -57,11 +57,6 @@ class Hand:
 
         return False
 
-    # funkcja zwraca wartość karty o danej liczbie wystąpień
-    def get_duplicate_hand_strength(self, count):
-        counter = self.get_counter_dict()
-        return self.get_card_with_count(count)
-
     # funkcja zwraca najwyższą kartę na ręce LUB 5 TYLKO w przypadku straighta z asem jako pierwsza karta
     def get_highest_card(self):
         if self.get_values() == [2, 3, 4, 5, "A"]:
@@ -191,17 +186,17 @@ class Hand:
 
             # Najpierw sprawdza czy poczwórna karta jest taka sama, jeżeli jest to sprawdza pozostałą
             if self.check_four_of_a_kind():
-                if self.get_duplicate_hand_strength(4) != other.get_duplicate_hand_strength(4):
-                    return self.get_duplicate_hand_strength(4) < other.get_duplicate_hand_strength(4)
+                if self.get_card_with_count(4) != other.get_card_with_count(4):
+                    return self.get_card_with_count(4) < other.get_card_with_count(4)
                 else:
                     return self.standalone_card_comparator(other, 4, "lt")
 
             # Najpierw sprawdza potrójną kartę, potem podwójną
             if self.check_full_house():
-                if self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3):
-                    return self.get_duplicate_hand_strength(3) < other.get_duplicate_hand_strength(3)
+                if self.get_card_with_count(3) != other.get_card_with_count(3):
+                    return self.get_card_with_count(3) < other.get_card_with_count(3)
                 else:
-                    return self.get_duplicate_hand_strength(2) < other.get_duplicate_hand_strength(2)
+                    return self.get_card_with_count(2) < other.get_card_with_count(2)
 
             # Sprawdza po kolei wszystkie karty i porównuje ze sobą
             if self.check_flush():
@@ -213,15 +208,15 @@ class Hand:
 
             # Najpierw sprawdza potrójną kartę, potem pozostałe
             if self.check_three_of_a_kind():
-                if self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3):
-                    return self.get_duplicate_hand_strength(3) < other.get_duplicate_hand_strength(3)
+                if self.get_card_with_count(3) != other.get_card_with_count(3):
+                    return self.get_card_with_count(3) < other.get_card_with_count(3)
                 else:
                     return self.standalone_card_comparator(other, 3, "lt")
 
             if self.check_two_pairs():
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_duplicate_hand_strength(2)
-                other.first_pair = other.get_duplicate_hand_strength(2)
+                self.first_pair = self.get_card_with_count(2)
+                other.first_pair = other.get_card_with_count(2)
 
                 # Usuwa pierwszą parę z tablicy
                 for _ in range(2):
@@ -229,8 +224,8 @@ class Hand:
                     other.cards.pop(other.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_duplicate_hand_strength(2)
-                other.second_pair = other.get_duplicate_hand_strength(2)
+                self.second_pair = self.get_card_with_count(2)
+                other.second_pair = other.get_card_with_count(2)
 
                 # Usuwa pierwszą drugą z tablicy
                 for _ in range(2):
@@ -255,8 +250,8 @@ class Hand:
 
             # Najpierw sprawdza podwójną kartę, następnie po kolei pozostałe
             if self.check_pair():
-                if self.get_duplicate_hand_strength(2) != other.get_duplicate_hand_strength(2):
-                    return self.get_duplicate_hand_strength(2) < other.get_duplicate_hand_strength(2)
+                if self.get_card_with_count(2) != other.get_card_with_count(2):
+                    return self.get_card_with_count(2) < other.get_card_with_count(2)
                 else:
                     return self.standalone_card_comparator(other, 2, "lt")
 
@@ -274,15 +269,15 @@ class Hand:
 
             # Najpierw sprawdza czy poczwórna karta jest taka sama, jeżeli nie to zwraca False, jeżeli tak to sprawdza ostatnią kartę
             if self.check_four_of_a_kind():
-                if self.get_duplicate_hand_strength(4) != other.get_duplicate_hand_strength(4):
+                if self.get_card_with_count(4) != other.get_card_with_count(4):
                     return False
                 else:
                     return self.standalone_card_comparator(other, 4, "eq")
 
             # Sprawdza czy potrójna karta jest taka sama i jednocześnie czy podwójna karta jest taka sama
             if self.check_full_house():
-                return self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3) \
-                       and self.get_duplicate_hand_strength(2) != other.get_duplicate_hand_strength(2)
+                return self.get_card_with_count(3) == other.get_card_with_count(3) \
+                       and self.get_card_with_count(2) == other.get_card_with_count(2)
 
             # Sprawdza po kolei wszystkie karty i porównuje ze sobą
             if self.check_flush():
@@ -294,15 +289,15 @@ class Hand:
 
             # Najpierw sprawdza czy potrójna karta jest taka sama, jeżeli nie to zwraca False, jeżeli tak to sprawdza pozostałe karty
             if self.check_three_of_a_kind():
-                if self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3):
+                if self.get_card_with_count(3) != other.get_card_with_count(3):
                     return False
                 else:
                     return self.standalone_card_comparator(other, 3, "eq")
 
             if self.check_two_pairs():
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_duplicate_hand_strength(2)
-                other.first_pair = other.get_duplicate_hand_strength(2)
+                self.first_pair = self.get_card_with_count(2)
+                other.first_pair = other.get_card_with_count(2)
 
                 # Usuwa pierwszą parę z tablicy
                 for _ in range(2):
@@ -310,8 +305,8 @@ class Hand:
                     other.cards.pop(other.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_duplicate_hand_strength(2)
-                other.second_pair = other.get_duplicate_hand_strength(2)
+                self.second_pair = self.get_card_with_count(2)
+                other.second_pair = other.get_card_with_count(2)
 
                 # Usuwa drugą parę z tablicy
                 for _ in range(2):
@@ -333,7 +328,7 @@ class Hand:
 
             # Sprawdza czy podwójna karta jest taka sama, jeżeli tak to sprawdza pozostałe karty
             if self.check_pair():
-                if self.get_duplicate_hand_strength(2) != other.get_duplicate_hand_strength(2):
+                if self.get_card_with_count(2) != other.get_card_with_count(2):
                     return False
                 else:
                     return self.standalone_card_comparator(other, 2, "eq")
@@ -352,17 +347,17 @@ class Hand:
 
             # Najpierw sprawdza czy poczwórna karta jest taka sama, jeżeli jest to sprawdza pozostałą
             if self.check_four_of_a_kind():
-                if self.get_duplicate_hand_strength(4) != other.get_duplicate_hand_strength(4):
-                    return self.get_duplicate_hand_strength(4) > other.get_duplicate_hand_strength(4)
+                if self.get_card_with_count(4) != other.get_card_with_count(4):
+                    return self.get_card_with_count(4) > other.get_card_with_count(4)
                 else:
                     return self.standalone_card_comparator(other, 4, "gt")
 
             # Najpierw sprawdza potrójną kartę, potem podwójną
             if self.check_full_house():
-                if self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3):
-                    return self.get_duplicate_hand_strength(3) > other.get_duplicate_hand_strength(3)
+                if self.get_card_with_count(3) != other.get_card_with_count(3):
+                    return self.get_card_with_count(3) > other.get_card_with_count(3)
                 else:
-                    return self.get_duplicate_hand_strength(2) > other.get_duplicate_hand_strength(2)
+                    return self.get_card_with_count(2) > other.get_card_with_count(2)
 
             # Sprawdza po kolei wszystkie karty i porównuje ze sobą
             if self.check_flush():
@@ -374,15 +369,15 @@ class Hand:
 
             # Najpierw sprawdza potrójną kartę, potem pozostałe
             if self.check_three_of_a_kind():
-                if self.get_duplicate_hand_strength(3) != other.get_duplicate_hand_strength(3):
-                    return self.get_duplicate_hand_strength(3) > other.get_duplicate_hand_strength(3)
+                if self.get_card_with_count(3) != other.get_card_with_count(3):
+                    return self.get_card_with_count(3) > other.get_card_with_count(3)
                 else:
                     return self.standalone_card_comparator(other, 3, "gt")
 
             if self.check_two_pairs():
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_duplicate_hand_strength(2)
-                other.first_pair = other.get_duplicate_hand_strength(2)
+                self.first_pair = self.get_card_with_count(2)
+                other.first_pair = other.get_card_with_count(2)
 
                 # Usuwa pierwszą parę
                 for _ in range(2):
@@ -390,8 +385,8 @@ class Hand:
                     other.cards.pop(other.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_duplicate_hand_strength(2)
-                other.second_pair = other.get_duplicate_hand_strength(2)
+                self.second_pair = self.get_card_with_count(2)
+                other.second_pair = other.get_card_with_count(2)
 
                 # Usuwa drugą parę
                 for _ in range(2):
@@ -416,8 +411,8 @@ class Hand:
 
             # Najpierw sprawdza podwójną kartę, następnie po kolei pozostałe
             if self.check_pair():
-                if self.get_duplicate_hand_strength(2) != other.get_duplicate_hand_strength(2):
-                    return self.get_duplicate_hand_strength(2) > other.get_duplicate_hand_strength(2)
+                if self.get_card_with_count(2) != other.get_card_with_count(2):
+                    return self.get_card_with_count(2) > other.get_card_with_count(2)
                 else:
                     return self.standalone_card_comparator(other, 2, "gt")
 
