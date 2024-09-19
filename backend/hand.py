@@ -251,7 +251,7 @@ class Hand:
                 if hand_copy.bigger_pair != other_copy.bigger_pair:
                     return hand_copy.bigger_pair < other_copy.bigger_pair
                 elif hand_copy.smaller_pair != other_copy.smaller_pair:
-                    return hand_copy.smaller_pair != other_copy.smaller_pair
+                    return hand_copy.smaller_pair < other_copy.smaller_pair
                 else:
                     return hand_copy.cards[0] < other_copy.cards[0]
 
