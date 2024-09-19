@@ -1,5 +1,6 @@
 from collections import Counter
 from card import UTIL_CARD_VALUES
+from copy import deepcopy
 
 UTIL_HAND_RANKS = {"high card": 0,
                    "pair": 1,
@@ -217,39 +218,42 @@ class Hand:
                     return self.standalone_card_comparator(other, 3, "lt")
 
             if self.check_two_pairs():
+                # Ponieważ w tej funkcji usuwamy elementy z self.cards działamy na kopii
+                hand_copy = deepcopy(self)
+                other_copy = deepcopy(other)
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_card_with_count(2)
-                other.first_pair = other.get_card_with_count(2)
+                hand_copy.first_pair = hand_copy.get_card_with_count(2)
+                other_copy.first_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa pierwszą parę z tablicy
                 for _ in range(2):
-                    self.cards.pop(self.first_pair)
-                    other.cards.pop(other.first_pair)
+                    hand_copy.cards.remove(hand_copy.first_pair)
+                    other_copy.cards.remove(other_copy.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_card_with_count(2)
-                other.second_pair = other.get_card_with_count(2)
+                hand_copy.second_pair = hand_copy.get_card_with_count(2)
+                other_copy.second_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa pierwszą drugą z tablicy
                 for _ in range(2):
-                    self.cards.pop(self.second_pair)
-                    other.cards.pop(other.second_pair)
+                    hand_copy.cards.remove(hand_copy.second_pair)
+                    other_copy.cards.remove(other_copy.second_pair)
 
                 # Zapisuje większą parę
-                self.bigger_pair = self.first_pair if self.first_pair > self.second_pair else self.second_pair
-                other.bigger_pair = other.first_pair if other.first_pair > other.second_pair else other.second_pair
+                hand_copy.bigger_pair = hand_copy.first_pair if hand_copy.first_pair > hand_copy.second_pair else hand_copy.second_pair
+                other_copy.bigger_pair = other_copy.first_pair if other_copy.first_pair > other_copy.second_pair else other_copy.second_pair
 
                 # Zapisuje mniejszą parę
-                self.smaller_pair = self.second_pair if self.first_pair == self.bigger_pair else self.first_pair
-                other.smaller_pair = other.second_pair if other.first_pair == other.bigger_pair else other.first_pair
+                hand_copy.smaller_pair = hand_copy.second_pair if hand_copy.first_pair == hand_copy.bigger_pair else hand_copy.first_pair
+                other_copy.smaller_pair = other_copy.second_pair if other_copy.first_pair == other_copy.bigger_pair else other_copy.first_pair
 
                 # Najpierw porównuje większą parę, potem mniejszą, potem pozostałą kartę
-                if self.bigger_pair != other.bigger_pair:
-                    return self.bigger_pair < other.bigger_pair
-                elif self.smaller_pair != other.smaller_pair:
-                    return self.smaller_pair != other.smaller_pair
+                if hand_copy.bigger_pair != other_copy.bigger_pair:
+                    return hand_copy.bigger_pair < other_copy.bigger_pair
+                elif hand_copy.smaller_pair != other_copy.smaller_pair:
+                    return hand_copy.smaller_pair != other_copy.smaller_pair
                 else:
-                    return self.cards[0] < other.cards[0]
+                    return hand_copy.cards[0] < other_copy.cards[0]
 
             # Najpierw sprawdza podwójną kartę, następnie po kolei pozostałe
             if self.check_pair():
@@ -298,36 +302,39 @@ class Hand:
                     return self.standalone_card_comparator(other, 3, "eq")
 
             if self.check_two_pairs():
+                # Ponieważ w tej funkcji usuwamy elementy z self.cards działamy na kopii
+                hand_copy = deepcopy(self)
+                other_copy = deepcopy(other)
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_card_with_count(2)
-                other.first_pair = other.get_card_with_count(2)
+                hand_copy.first_pair = hand_copy.get_card_with_count(2)
+                other_copy.first_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa pierwszą parę z tablicy
                 for _ in range(2):
-                    self.cards.pop(self.first_pair)
-                    other.cards.pop(other.first_pair)
+                    hand_copy.cards.remove(hand_copy.first_pair)
+                    other_copy.cards.remove(other_copy.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_card_with_count(2)
-                other.second_pair = other.get_card_with_count(2)
+                hand_copy.second_pair = hand_copy.get_card_with_count(2)
+                other_copy.second_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa drugą parę z tablicy
                 for _ in range(2):
-                    self.cards.pop(self.second_pair)
-                    other.cards.pop(other.second_pair)
+                    hand_copy.cards.remove(hand_copy.second_pair)
+                    other_copy.cards.remove(other_copy.second_pair)
 
                 # Zapisuje większą parę
-                self.bigger_pair = self.first_pair if self.first_pair > self.second_pair else self.second_pair
-                other.bigger_pair = other.first_pair if other.first_pair > other.second_pair else other.second_pair
+                hand_copy.bigger_pair = hand_copy.first_pair if hand_copy.first_pair > hand_copy.second_pair else hand_copy.second_pair
+                other_copy.bigger_pair = other_copy.first_pair if other_copy.first_pair > other_copy.second_pair else other_copy.second_pair
 
                 # Zapisuje mniejszą parę
-                self.smaller_pair = self.second_pair if self.first_pair == self.bigger_pair else self.first_pair
-                other.smaller_pair = other.second_pair if other.first_pair == other.bigger_pair else other.first_pair
+                hand_copy.smaller_pair = hand_copy.second_pair if hand_copy.first_pair == hand_copy.bigger_pair else hand_copy.first_pair
+                other_copy.smaller_pair = other_copy.second_pair if other_copy.first_pair == other_copy.bigger_pair else other_copy.first_pair
 
                 # Sprawdza czy większa para jest taka sama i mniejsza para jest taka sama i ostatnia karta jest taka sama
-                return self.bigger_pair == other.bigger_pair \
-                       and self.smaller_pair == other.smaller_pair \
-                       and self.cards[0] == other.cards[0]
+                return hand_copy.bigger_pair == other_copy.bigger_pair \
+                       and hand_copy.smaller_pair == other_copy.smaller_pair \
+                       and hand_copy.cards[0] == other_copy.cards[0]
 
             # Sprawdza czy podwójna karta jest taka sama, jeżeli tak to sprawdza pozostałe karty
             if self.check_pair():
@@ -378,39 +385,42 @@ class Hand:
                     return self.standalone_card_comparator(other, 3, "gt")
 
             if self.check_two_pairs():
+                # Ponieważ w tej funkcji usuwamy elementy z self.cards działamy na kopii
+                hand_copy = deepcopy(self)
+                other_copy = deepcopy(other)
                 # Zapisuje pierwszą parę
-                self.first_pair = self.get_card_with_count(2)
-                other.first_pair = other.get_card_with_count(2)
+                hand_copy.first_pair = hand_copy.get_card_with_count(2)
+                other_copy.first_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa pierwszą parę
                 for _ in range(2):
-                    self.cards.pop(self.first_pair)
-                    other.cards.pop(other.first_pair)
+                    hand_copy.cards.remove(hand_copy.first_pair)
+                    other_copy.cards.remove(other_copy.first_pair)
 
                 # Zapisuje drugą parę
-                self.second_pair = self.get_card_with_count(2)
-                other.second_pair = other.get_card_with_count(2)
+                hand_copy.second_pair = hand_copy.get_card_with_count(2)
+                other_copy.second_pair = other_copy.get_card_with_count(2)
 
                 # Usuwa drugą parę
                 for _ in range(2):
-                    self.cards.pop(self.second_pair)
-                    other.cards.pop(other.second_pair)
+                    hand_copy.cards.remove(hand_copy.second_pair)
+                    other_copy.cards.remove(other_copy.second_pair)
 
                 # Zapisuje większą parę
-                self.bigger_pair = self.first_pair if self.first_pair > self.second_pair else self.second_pair
-                other.bigger_pair = other.first_pair if other.first_pair > other.second_pair else other.second_pair
+                hand_copy.bigger_pair = hand_copy.first_pair if hand_copy.first_pair > hand_copy.second_pair else hand_copy.second_pair
+                other_copy.bigger_pair = other_copy.first_pair if other_copy.first_pair > other_copy.second_pair else other_copy.second_pair
 
                 # Zapisuje mniejszą parę
-                self.smaller_pair = self.second_pair if self.first_pair == self.bigger_pair else self.first_pair
-                other.smaller_pair = other.second_pair if other.first_pair == other.bigger_pair else other.first_pair
+                hand_copy.smaller_pair = hand_copy.second_pair if hand_copy.first_pair == hand_copy.bigger_pair else hand_copy.first_pair
+                other_copy.smaller_pair = other_copy.second_pair if other_copy.first_pair == other_copy.bigger_pair else other_copy.first_pair
 
                 # Najpierw porównuje większą parę, potem mniejszą, potem pozostałą kartę
-                if self.bigger_pair != other.bigger_pair:
-                    return self.bigger_pair > other.bigger_pair
-                elif self.smaller_pair != other.smaller_pair:
-                    return self.smaller_pair > other.smaller_pair
+                if hand_copy.bigger_pair != other_copy.bigger_pair:
+                    return hand_copy.bigger_pair > other_copy.bigger_pair
+                elif hand_copy.smaller_pair != other_copy.smaller_pair:
+                    return hand_copy.smaller_pair > other_copy.smaller_pair
                 else:
-                    return self.cards[0] > other.cards[0]
+                    return hand_copy.cards[0] > other_copy.cards[0]
 
             # Najpierw sprawdza podwójną kartę, następnie po kolei pozostałe
             if self.check_pair():
