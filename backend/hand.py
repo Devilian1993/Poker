@@ -6,7 +6,7 @@ from collections import Counter
 
 UTIL_HAND_RANKS = {"high card": 0,
             "pair": 1,
-            "two pair": 2,
+            "two pairs": 2,
             "three of a kind": 3,
             "straight": 4,
             "flush": 5,

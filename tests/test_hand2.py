@@ -59,7 +59,7 @@ class TestHand(unittest.TestCase):
             Card("Spades", 10),
             Card("Hearts", "Q"),
             Card("Spades", "Q"),
-            Card("Diamonds", "Q"),
+            Card("Diamonds", 2),
         ])
 
         self.pair = Hand([
