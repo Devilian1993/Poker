@@ -23,6 +23,9 @@ class Hand:
         else:
             self.cards = cards
 
+    def __repr__(self):
+        return f'[{", ".join(map(str, self.cards))}]'
+
     def get_values(self):
         values = []
         for card in self.cards:
