@@ -4,9 +4,9 @@ from hand import Hand
 
 class Player(User):
 
-    def __init__(self, username, balance, is_bot=False):
-        super().__init__(username, balance)
+    def __init__(self,username, balance, email, password, phone_number, is_bot=False):
+        super().__init__(username, balance, email, password, phone_number)
         self.is_bot = is_bot
-        self.personal_cards = []
+        self.hole_cards = []
         self.hand = Hand()
 
