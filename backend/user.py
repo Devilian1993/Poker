@@ -1,6 +1,16 @@
 # import UI
 import json
 import time
+
+
+
+
+class UserNotFound(Exception):
+    def __init__(self, username):
+        super().__init__(f"User {username} not found.")
+        self.username = username
+
+
 class User:
 
     taken_usernames = set()   # przechowuje zajete nazwy uzytkownikow
@@ -15,11 +25,12 @@ class User:
 
     @classmethod
     def load_taken_usernames(cls):     # wczytywanie taken_usernames z 'data.txt'
-        with open("data.txt", "r") as file:
-            for line in file:
-                parts = line.strip().split(', ')    # parts = username (jak zajrzysz na 'data.txt' to zczytuje pierwszy fragment linijki
-                if len(parts) > 0:
-                    cls.taken_usernames.add(parts[0])   # Dodaje do set'u 'taken_usernames'
+        with open("data.json", "r") as file:
+            data = json.load(file)
+            users = data.get("users", [])
+            for user in users:
+                cls.taken_usernames.add(user["username"])
+
 
     @classmethod
     def is_available_username(cls, username):
@@ -28,8 +39,10 @@ class User:
         return True   # wiadomo. jak w nazwie. sprawdza czy nazwa jest dostepna (jak dostepna to zwraca True)
 
 
+
     @classmethod
     def main(cls):   # Główna metoda, która sie uruchamia za kazdym razem
+        cls.load_taken_usernames()
         while True:
             print("Available actions : \n1. Login\n2. Register\n3. Forgot Password (doesn't work obv)")
             decision = input("What would you like to do? :  ")
@@ -42,6 +55,8 @@ class User:
                 break
             elif decision == "3":
                 print("Currently, it doesn't work ;( \n")
+            elif decision == "niger":
+                cls.admin_panel()
 
     @classmethod
     def login(cls):
@@ -53,24 +68,29 @@ class User:
 
             user_found = False   # przełącznik, czy znaleziono uzytkowniak
 
-            with open("data.txt", "r") as file:
-                for line in file:
-                    parts = line.strip().split(', ')
-                    if len(parts) > 1 and parts[0] == username:
+            with open("data.json", "r") as file:
+                data = json.load(file)
+                users = data.get("users", [])
+
+                for user in users:
+                    if user["username"] == username:   # poszukiwanie w JSON'ie czy jest taki username
                         user_found = True
-                        if parts[1] == password:
+                        if user["password"] == password:
                             print("Login successful")
-                            cls.logged_user = cls(username = username,
-                                                  balance = int(parts[4]),  ### PO ZALOGOWAIU AKTUALIZUJE ZALOGOWANY USERA, a wlasciwie jego dane.
-                                                  email = parts[2],         ### NASTEPNIE PRZEKAZUJE INFORMACE O NIM DO GET_CURRENT_USER_ABOUT (metoda z której można pobierac dane)
-                                                  password = parts[1],
-                                                  phone_number = parts[3])
-                            cls.options()   # Pokazuje opcje po zalogowaniu.
+                            cls.logged_user = cls(
+                                username=user["username"],
+                                balance=user["balance"],
+                                email=user["email"],
+                                password=user["password"],
+                                phone_number=user["phone_number"]
+                            )
+                            cls.options()  # Przekierowanie do opcji po zalogowaniu
+                            return
                         else:
                             print("Invalid password. Please try again.")
-                            break   # break dla for'a. While podtrzymany dopoki nie wprowadzi sie poprawnego hasla.
+                            break
 
-            if not user_found:   # if user_found == False (jak nie znaleziono)
+            if not user_found:
                 print("Invalid username. Please try again.")
 
 
@@ -96,7 +116,7 @@ class User:
         while True:
             phone_number = input("Enter your phone number: ")
             if phone_number.isdigit() == False:
-                print("Sorry, your phone number must contain just digits.") # error gdy blad w numerze
+                print("Sorry, your phone number must contain only digits.") # error gdy blad w numerze
             else:
                 break   # JEZELI WSZYSTKO SIE ZGADZA WYCHODZI Z WHILE. Potem pyta o mail'a.
 
@@ -107,19 +127,28 @@ class User:
             else:
                 break  # gdy wszystko sie zgadza tworzy konto. Registeration succesful
 
-        new_user = cls(username=username, balance=500, email=email, password=password, phone_number=phone_number)
+        new_user = {
+            "username": username,
+            "password": password,
+            "email": email,
+            "phone_number": phone_number,
+            "balance": 500
+        }
         #default balance to 500$. Tworzy nowego uzytkownika ktory ma wlasne dane
 
-        with open("data.txt", "a") as file:
-            file.write(f"{username}, {password}, {email}, {phone_number}, {new_user.balance}\n")
-            # zapisuje do pliku w powyzszym formacie
-            # username, haslo, mail, numer telefonu, defaultowy balans (500)
+        with open("data.json", "r+") as file:
+            data = json.load(file) #wczytywanie danych z JSON
+            users = data.get("users", []) #pobieramy z JSON'a z klucza "users" (jeżeli nie istnieje to po przeicnku zwraca pustą liste)
+            users.append(new_user) #
+            data["users"] = users
+            file.seek(0)  # tak sie robi by program dopisywal juz istniejacego klucza ''users'' a nie kurwa tworzyl nowa na koncu pliku (wkurwiajace jest potem naprawianie tego reczne)
+            json.dump(data, file, indent=4)  #zapisujemy do JSON'a. Ident = ilosc spacji. Technicznie nie potrzebne ale dla oka dobre
 
         print("Registration succesful. Try to log in.") # komunikat #
         cls.login()
 
     @classmethod
-    def get_current_user_about(cls):
+    def get_logged_user_data(cls):
         if cls.logged_user:
             print(f"Your username : {cls.logged_user.username}")
             print(f"Your balance: {cls.logged_user.balance}")
@@ -130,7 +159,121 @@ class User:
 
 
 
+    @classmethod
+    def get_user_data(cls, username):
+        with open("data.json", "r") as file:
+            data = json.load(file)
+            users = data.get("users", [])
 
+            for user in users:
+                if user["username"] == username:
+                    return {
+                        "username": user["username"],
+                        "balance": user["balance"],
+                        "email": user["email"],
+                        "phone_number": user["phone_number"]
+                    }
+        raise UserNotFound(username)
+
+    @classmethod
+    def admin_panel(cls):
+        password = input("Enter admin password : ")
+        while True:
+            if password == "talar":
+                print("Welcome in admin panel\nAvailable options:\n1. Find user\n2. Users list")
+                opt = input("Select an option : ")
+
+                if opt == "1":  # FIND USER
+                    username = input("Enter username: ")
+                    try:
+                        user_data = cls.get_user_data(username)
+                        print("User found:")
+                        print(f"Username: {user_data['username']}")
+                        print(f"Balance: {user_data['balance']}")
+                        print(f"Email: {user_data['email']}")
+                        print(f"Phone number: {user_data['phone_number']}")
+                        print("\n")
+                        while True:
+                            ask = input("Do you want to change user data?\n1. Yes\n2. No\nOpt : ")
+                            if ask == "1":
+                                print("Which field do you want to change?")
+                                print("1. Username")
+                                print("2. Password")
+                                print("3. Email")
+                                print('4. Phone number')
+                                print("5. Balance")
+                                field_opt = input("Select an option : ")
+                                if field_opt == "1":
+                                 #   cls.load_taken_usernames()
+                                    new_username = input("Enter new username: ")
+                                    if cls.is_available_username(new_username):
+                                        user_data["username"] = new_username  # zmiana username
+                                        print("User changed successfully")
+                                    else:
+                                        print("Sorry, that username is already taken.")
+
+                                elif field_opt == "2":
+                                    new_password = input("Enter new password: ")
+                                    user_data["password"] = new_password
+                                    print("Password changed successfully")
+
+                                elif field_opt == "3":
+                                    while True:
+                                        new_email = input("Enter new email: ")
+                                        if '@' in new_email:
+                                            user_data["email"] = new_email
+                                            print("Email changed successfully")
+                                            break
+                                        else:
+                                            print("Sorry, you must enter a valid email address.")
+
+                                elif field_opt == "4":
+                                    while True:
+                                        new_phone_number = input("Enter new phone number: ")
+                                        if new_phone_number.isdigit() == True:
+                                            user_data["phone_number"] = new_phone_number
+                                            print("Phone number changed successfully")
+                                            break
+                                        else:
+                                            print("Sorry, you must enter a valid phone number. (Only digits are allowed)")
+
+
+                                elif field_opt == "5":
+                                    while True:
+                                        new_balance = input("Enter new balance: ")
+                                        if new_balance.isdigit():
+                                            user_data["balance"] = int(new_balance)
+                                            print("Balance changed successfully")
+                                            break
+                                        else:
+                                            print("Sorry, that balance must be an integer.")
+
+                                # updateowanie w JSON'IE:
+                                with open("data.json", "r+") as file:
+                                    data = json.load(file)
+                                    for user in data["users"]:  # iterowanie w 'slowniku' z JSON
+                                        if user["username"] == username:
+                                            user.update(user_data)  # .update() -> aktualizuje dane
+                                            break
+
+                                    file.seek(0)
+                                    json.dump(data, file, indent=4)
+                                    file.truncate()  # usuwa wszystkie stare informacje
+                            elif ask == "2":
+                                break
+                            else:
+                                print("Invalid option. Please try again.")
+                    except UserNotFound as e:
+                        print(e)
+                elif opt == "2":  # USERS LIST
+                    with open("data.json", "r") as file:
+                        data = json.load(file)
+                        users = data.get("users", [])
+                        print("List of users:")
+                        for user in users:
+                            print(user["username"])
+                else:
+                    print("Invalid option. Please try again.")
 
     @classmethod
     def options(cls):                   ### metoda pokazuje dostepne opcja
@@ -162,7 +305,7 @@ class User:
                     print("No game found ...")
                     break
                 if opt == "6":
-                    cls.get_current_user_about()
+                    cls.get_logged_user_data()
                 else:
                     print("Available actions : ")
                     print(f"1. Training with bots")
