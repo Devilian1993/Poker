@@ -1,8 +1,9 @@
 # import UI
 import json
 import time
-
-
+#from player import Player
+#from deck import Deck
+#from game import PokerGame
 
 
 class UserNotFound(Exception):
@@ -290,7 +291,7 @@ class User:
                 print(f"7. Past games")
                 opt = input("What would you like to do? : ")
                 if opt == "1":
-                    pass# PRZEKIEROWANIE DO USTAWIEŃ JAK POZIOM TRUDNOSCI BOTÓW, ILOSC ROZDAN, BUDŻET, HANDICUP (jebać)
+                    #
                     break
                 if opt == "2":
                     for i in range(3):
