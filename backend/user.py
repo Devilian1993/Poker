@@ -1,4 +1,5 @@
 # import UI
+import json
 import time
 class User:
 
@@ -21,7 +22,7 @@ class User:
                     cls.taken_usernames.add(parts[0])   # Dodaje do set'u 'taken_usernames'
 
     @classmethod
-    def if_available_username(cls, username):
+    def is_available_username(cls, username):
         if username in cls.taken_usernames:
             return False
         return True   # wiadomo. jak w nazwie. sprawdza czy nazwa jest dostepna (jak dostepna to zwraca True)
@@ -79,7 +80,7 @@ class User:
 
         while True:
             username = input("Enter your username: ")
-            if cls.if_available_username(username) == False:   # JEZELI ZAJETE
+            if not cls.is_available_username(username):   # JEZELI ZAJETE
                 print("Sorry, that username is already taken.")
             else:
                 break   #JEŻELI NIE ZAJETE TO WYCHODZI Z WHILE I PYTA O PASSWORD
