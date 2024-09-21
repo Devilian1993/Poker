@@ -35,11 +35,5 @@
             "phone_number": "9",
             "balance": 500
         }
-    ],
-    "game_sessions": [
-        {
-            "date": "2001-09-11",
-            "id": "session_1"
-        }
     ]
 }
