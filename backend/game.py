@@ -166,6 +166,53 @@ class PokerGame:
             if player.balance < self.current_bet and "check" not in available_actions:  # gdy mozemy tylko pass
                 action_probabilities = {"pass": 1.0}
 
+    # Funkcja zwraca wygrywającą rękę tzn. najsilniejszą ręke przy kartach w grze
+    def get_winning_hand(self):
+        hands = []
+        for player in self.players:
+            player.hand = HandSelector(self.community_cards, player.hole_cards).select_best_hand()
+            hands.append(player.hand)
+
+        hands.sort()
+
+        return hands[-1]
+
+    # Funkcja zwraca tablice zawierającą graczy którzy wygrali (o długości 1 jeżeli wygrał jeden gracz lub więcej w przypadku remisu)
+    def get_winner(self, winning_hand):
+        winners = []
+        for player in self.players:
+            if player.hand == winning_hand:
+                return winners.append(player)
+
+        return winners
+
+    # Funkcja przekazuje pieniądze userowi (nie playerowi)
+    def transfer_to_user(self, player):
+        pass
+
+    # Funkcja dzieląca pot pomiędzy zwycięzcami
+    def split_pot(self, winners):
+        prize = self.pot//len(winners)
+
+        for winner in winners:
+            self.transfer_to_user(winner)
+
+        pass
+
+    # Na koniec rozdania
+    def showdown(self):
+
+        winning_hand = self.get_winning_hand()
+        winners = self.get_winner(winning_hand)
+
+        print("Game is over")
+        if len(winners) > 1:
+            print(f"Game ended with a draw! Players {', '.join(winners)} won!")
+            self.split_pot(winners)
+        else:
+            print(f"Player {winners[0]} won!")
+            self.transfer_to_user(winners[0])
+
     # w play_round trzeba zmienic jedna rzecz
     # negocjacje nie dzialaja w prawidlowy sposob
     # tzn.
