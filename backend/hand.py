@@ -22,6 +22,7 @@ class Hand:
             cards = []
         else:
             self.cards = cards
+            self.cards.sort()
 
     def __repr__(self):
         return f'[{", ".join(map(str, self.cards))}]'
@@ -124,8 +125,6 @@ class Hand:
         return self.count_checker(2)
 
     def hand_value(self):
-        self.cards.sort()
-
         if self.check_royal_flush():
             return "royal flush"
 
