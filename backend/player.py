@@ -9,4 +9,12 @@ class Player(User):
         self.is_bot = is_bot
         self.hole_cards = []
         self.hand = Hand()
+        self.current_bet = 0
+        self.is_active = True
 
+    def reset_bet(self):
+        self.current_bet = 0
+
+
+    def reset_activity(self):
+        self.is_active = True

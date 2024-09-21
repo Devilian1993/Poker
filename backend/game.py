@@ -114,8 +114,157 @@ class PokerGame:
         self.community_cards.append(card)
         print(f"Community cards: {self.community_cards}")
 
-    def negotiation(self):
-        pass
+    import time
+
+    def negotiation(self, player):
+        if not player.is_active:  # jezeli gracz not is_active, to go pomijamy przy negocjacjach
+            return
+
+        if player.username == "V":  # Sterowanie tylko 'V' (potem trzeba to zamienic na logged_user.username na dalszym etapie
+            while True:
+                print(f"Current pot: {self.pot}, Your balance: {player.balance}")
+                print(f"Choose your action. Available action's: ")
+
+
+                # ----------------------------
+                # == SPRAWDZA DOSTEPNE AKCJE =
+                # ----------------------------
+                available_actions = []
+
+
+                if player.current_bet == self.current_bet:
+                    available_actions.append("check")  # gdy current_bet = self.current_bet
+
+                available_actions.append("pass")  # zawsze mozna pass
+
+                if player.balance >= (self.current_bet - player.current_bet):  # gdy moze call
+                    available_actions.append("call")
+
+                if player.balance > self.current_bet:  # gdy moze raise
+                    available_actions.append("raise")
+
+                #print(available_actions)
+                # wyswietla dostepne akcje
+
+
+
+                if "call" in available_actions and "raise" in available_actions and "check" in available_actions:
+                    print("Call, Raise, Check and Pass")
+
+                elif "check" in available_actions:
+                    print("Check and Pass")
+
+                elif "call" in available_actions and "check" in available_actions:
+                    print("Call, Check and Pass")
+
+                elif "pass" in available_actions and "call" in available_actions and "raise" in available_actions:
+                    print("Call, Raise and Pass.")
+
+                elif "pass" in available_actions:
+                    print("Pass")
+
+
+                # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+                action = input("Choose an action : ").lower()
+
+                if action == "pass":
+                    print(f"{player.username} passes.")
+                    time.sleep(1.5)
+                    player.is_active = False   # wyłącza nas z gry
+                    return
+
+                elif action == "check" and "check" in available_actions:   # warunek na check
+                    print(f"{player.username} checks.")
+                    time.sleep(1.5)
+                    return
+
+                elif action == "call" and "call" in available_actions:
+                    call_amount = self.current_bet - player.current_bet
+                    player.balance -= call_amount
+                    player.current_bet += call_amount
+                    self.pot += call_amount
+                    print(f"{player.username} calls, adding {call_amount} to the pot.")
+                    time.sleep(1.5)
+                    return
+
+                elif action == "raise" and "raise" in available_actions:
+                    while True:
+                        raise_amount = input(f"How much do you want to raise? (minimum: {self.current_bet + 1}): ")
+                        if raise_amount.isnumeric():
+                            raise_amount = int(raise_amount)
+                            player.balance -= raise_amount
+                            player.current_bet += raise_amount
+                            self.pot += raise_amount
+                            self.current_bet = raise_amount
+                            print(f"{player.username} raises to {raise_amount}.")
+                            time.sleep(1.5)
+                            break
+
+                        else:
+                            print(f"Invalid raise amount.")
+
+                else:
+                    print("This option is not available.")
+                    time.sleep(1.5)
+
+
+
+        ## tu logika dla bota
+
+        else:  # Bot logic
+            print(f"{player.username}'s turn (bot).")
+            time.sleep(1.5)
+
+            # ----------------------------
+            # == SPRAWDZA DOSTEPNE AKCJE =
+            # ----------------------------
+
+
+
+            available_actions = []
+
+
+            if player.current_bet == self.current_bet:
+                available_actions.append("check")  # gdy current_bet = self.current_bet
+
+            available_actions.append("pass")  # zawsze mozna pass
+
+            if player.balance >= (self.current_bet - player.current_bet):  # gdy moze call
+                available_actions.append("call")
+
+            if player.balance > self.current_bet:  # gdy moze raise
+                available_actions.append("raise")
+
+            # na potrzebe symulacji ustalilem losowo akcje bota
+            # nie podpinalem tego do niczego bo jest to mocno "hardkorowa" wersja + nie potrafie tego zrobic na szybko
+
+            if "check" not in available_actions and "raise" in available_actions and "call" in available_actions:  # gdy nie mozemy check
+                action_probabilities = {"pass": 0.3, "call": 0.4, "raise": 0.3}
+
+            if "check" in available_actions and "call" not in available_actions and "raise" not in available_actions:
+                action_probabilities = {"check": 1.0, "pass": 0.0, "call": 0.0, "raise": 0.0}
+
+            if player.balance < self.current_bet and "check" not in available_actions:  # gdy mozemy tylko pass
+                action_probabilities = {"pass": 1.0}
+
+
+
+
+    # w play_round trzeba zmienic jedna rzecz
+    # negocjacje nie dzialaja w prawidlowy sposob
+    # tzn.
+    # np jak gra czterech graczy
+    # A : check
+    # B : check
+    # C : raise
+    # D : call
+    # tu konczy sie kolejka, a powinno pojsc jeszcze 'jedna' tura az do tego co 'raise'
+    # czyli potem D, A, B, C
+    # DOPOKI AZ KAZDY GRACZ NIE ZAGRA check albo pass
+    # Jezeli chodzi o ALL-IN to tego w ogole nie robilem na razie
+    # Na razie boty (stan na 21.09.2024 na 16:05) nie podejmują w ogóle decyzji
+
 
     def play_round(self, starting_index):
         for i in range(len(self.players)):
@@ -171,6 +320,7 @@ class PokerGame:
         print(f"Community cards: {self.community_cards}")
         # potem tu winnera wyznaczy
         time.sleep(2)
+        print("The winner is : {winner_username}")
 
 
 
