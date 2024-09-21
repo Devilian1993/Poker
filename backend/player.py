@@ -29,7 +29,7 @@ class Player(User):
         if self.current_bet == self.game.current_bet:
             available_actions.append("check")
 
-        if self.balance >= (self.game.current_bet - self.current_bet):
+        if self.balance >= (self.game.current_bet - self.current_bet) and self.current_bet != self.game.current_bet:
             available_actions.append("call")
 
         if self.balance > self.game.current_bet:  # gdy moze raise
