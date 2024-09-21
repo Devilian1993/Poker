@@ -31,6 +31,7 @@ class PokerGame:
         self.pot = 0  # initial pot
         self.current_bet = 0  # current bet
         self.dealer_index = None  # remember dealer index
+        self.game_phase = "pre-flop"
 
     def table(self):
         print("Players at the table:")
@@ -92,6 +93,7 @@ class PokerGame:
         print(f"Current pot: {self.pot}")
 
     def flop(self):
+        self.game_phase = "flop"
         print("\n==== FLOP ====")
         for _ in range(3):
             card = self.deck.deck.pop()
@@ -99,12 +101,14 @@ class PokerGame:
         print(f"Community cards: {self.community_cards}")
 
     def turn(self):
+        self.game_phase = "turn"
         print("\n==== TURN ====")
         card = self.deck.deck.pop()
         self.community_cards.append(card)
         print(f"Community cards: {self.community_cards}")
 
     def river(self):
+        self.game_phase = "river"
         print("\n==== RIVER ====")
         card = self.deck.deck.pop()
         self.community_cards.append(card)
