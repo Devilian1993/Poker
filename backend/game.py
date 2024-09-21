@@ -1,4 +1,3 @@
-
 from player import Player
 from deck import Deck
 import random
@@ -114,57 +113,35 @@ class PokerGame:
         self.community_cards.append(card)
         print(f"Community cards: {self.community_cards}")
 
-    import time
+    def get_available_actions(self, player):
+        available_actions = ["pass"]
+
+        if player.current_bet == self.current_bet:
+            available_actions.append("check")
+
+        if player.balance >= (self.current_bet - player.current_bet):
+            available_actions.append("call")
+
+        if player.balance > self.current_bet:  # gdy moze raise
+            available_actions.append("raise")
+
+        if not player.is_bot:
+            print(", ".join(available_actions))
+
+        return available_actions
 
     def negotiation(self, player):
-        if not player.is_active:  # jezeli gracz not is_active, to go pomijamy przy negocjacjach
+        # jezeli gracz not is_active, to go pomijamy przy negocjacjach
+        if not player.is_active:
             return
 
         if player.username == "V":  # Sterowanie tylko 'V' (potem trzeba to zamienic na logged_user.username na dalszym etapie
             while True:
                 print(f"Current pot: {self.pot}, Your balance: {player.balance}")
-                print(f"Choose your action. Available action's: ")
+                print(f"Choose your action. Available actions: ", end="")
 
-
-                # ----------------------------
-                # == SPRAWDZA DOSTEPNE AKCJE =
-                # ----------------------------
-                available_actions = []
-
-
-                if player.current_bet == self.current_bet:
-                    available_actions.append("check")  # gdy current_bet = self.current_bet
-
-                available_actions.append("pass")  # zawsze mozna pass
-
-                if player.balance >= (self.current_bet - player.current_bet):  # gdy moze call
-                    available_actions.append("call")
-
-                if player.balance > self.current_bet:  # gdy moze raise
-                    available_actions.append("raise")
-
-                #print(available_actions)
-                # wyswietla dostepne akcje
-
-
-
-                if "call" in available_actions and "raise" in available_actions and "check" in available_actions:
-                    print("Call, Raise, Check and Pass")
-
-                elif "check" in available_actions:
-                    print("Check and Pass")
-
-                elif "call" in available_actions and "check" in available_actions:
-                    print("Call, Check and Pass")
-
-                elif "pass" in available_actions and "call" in available_actions and "raise" in available_actions:
-                    print("Call, Raise and Pass.")
-
-                elif "pass" in available_actions:
-                    print("Pass")
-
-
-                # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                # get_available_actions() przy okazji printuje od razu (tylko dla gracza) więc nie trzeba ręcznie tego robić
+                available_actions = self.get_available_actions(player)
 
                 action = input("Choose an action : ").lower()
 
@@ -208,33 +185,13 @@ class PokerGame:
                     print("This option is not available.")
                     time.sleep(1.5)
 
-
-
         ## tu logika dla bota
 
         else:  # Bot logic
             print(f"{player.username}'s turn (bot).")
             time.sleep(1.5)
 
-            # ----------------------------
-            # == SPRAWDZA DOSTEPNE AKCJE =
-            # ----------------------------
-
-
-
-            available_actions = []
-
-
-            if player.current_bet == self.current_bet:
-                available_actions.append("check")  # gdy current_bet = self.current_bet
-
-            available_actions.append("pass")  # zawsze mozna pass
-
-            if player.balance >= (self.current_bet - player.current_bet):  # gdy moze call
-                available_actions.append("call")
-
-            if player.balance > self.current_bet:  # gdy moze raise
-                available_actions.append("raise")
+            available_actions = self.get_available_actions(player)
 
             # na potrzebe symulacji ustalilem losowo akcje bota
             # nie podpinalem tego do niczego bo jest to mocno "hardkorowa" wersja + nie potrafie tego zrobic na szybko
@@ -247,9 +204,6 @@ class PokerGame:
 
             if player.balance < self.current_bet and "check" not in available_actions:  # gdy mozemy tylko pass
                 action_probabilities = {"pass": 1.0}
-
-
-
 
     # w play_round trzeba zmienic jedna rzecz
     # negocjacje nie dzialaja w prawidlowy sposob
@@ -264,7 +218,6 @@ class PokerGame:
     # DOPOKI AZ KAZDY GRACZ NIE ZAGRA check albo pass
     # Jezeli chodzi o ALL-IN to tego w ogole nie robilem na razie
     # Na razie boty (stan na 21.09.2024 na 16:05) nie podejmują w ogóle decyzji
-
 
     def play_round(self, starting_index):
         for i in range(len(self.players)):
@@ -326,9 +279,9 @@ class PokerGame:
 
 game = PokerGame([
     Player("V", 1000, "v@v.com", 123456, 739),
-    Player("VernonRoche", 1000, "wolna@temeria.tm", 1209321, 3201),
-    Player("Takemura", 1000, "jebac@arasake.com", 129321, 2500),
-    Player("Geralt", 1000, "kaedwen@kaermorhen.blaviken", 892101, 3021)
+    Player("VernonRoche", 1000, "wolna@temeria.tm", 1209321, 3201, True),
+    Player("Takemura", 1000, "jebac@arasake.com", 129321, 2500, True),
+    Player("Geralt", 1000, "kaedwen@kaermorhen.blaviken", 892101, 3021, True)
 ])
 
 game.game()
