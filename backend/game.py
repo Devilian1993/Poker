@@ -137,12 +137,16 @@ class PokerGame:
 
                 if action == "fold":
                     player.fold_action()
+                    break
                 elif action == "check" and "check" in available_actions:   # warunek na check
                     player.check_action()
+                    break
                 elif action == "call" and "call" in available_actions:
                     player.call_action()
+                    break
                 elif action == "raise" and "raise" in available_actions:
                     player.raise_action()
+                    break
                 else:
                     print("This option is not available.")
                     time.sleep(1.5)
