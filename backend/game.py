@@ -186,7 +186,7 @@ class PokerGame:
         winners = []
         for player in self.players:
             if player.hand == winning_hand:
-                return winners.append(player)
+                winners.append(player)
 
         return winners
 

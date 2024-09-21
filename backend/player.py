@@ -12,6 +12,7 @@ class Player(User):
         self.current_bet = 0
         self.is_active = True
         self.game = game
+        self.hand = None
 
     def __repr__(self):
         return self.username
