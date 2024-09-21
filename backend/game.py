@@ -1,3 +1,4 @@
+from backend.hand_selector import HandSelector
 from player import Player
 from deck import Deck
 import random
@@ -23,14 +24,24 @@ import time
 
 class PokerGame:
 
-    def __init__(self, players):
+    def __init__(self):
         self.deck = Deck()
-        self.players = players
+        self.players = self.get_players()
         self.community_cards = []
         self.pot = 0  # initial pot
         self.current_bet = 0  # current bet
         self.dealer_index = None  # remember dealer index
         self.game_phase = "pre-flop"
+
+    # Przeniosłem pobieranie graczy do osobnego pliku, ponieważ obiekt player musi być połączony z obiektem game, więc player jest tworzony dopiero po utworzeniu gry
+    # Nie robi to problemu bo player jest tworzony na potrzeby konkretnej gry na podstawie obiektu user
+    def get_players(self):
+        return [
+            Player("V", 1000, "v@v.com", 123456, 739, self),
+            Player("VernonRoche", 1000, "wolna@temeria.tm", 1209321, 3201, self, True),
+            Player("Takemura", 1000, "jebac@arasake.com", 129321, 2500, self, True),
+            Player("Geralt", 1000, "kaedwen@kaermorhen.blaviken", 892101, 3021, self, True)
+            ]
 
     def table(self):
         print("Players at the table:")
@@ -45,7 +56,6 @@ class PokerGame:
         for player in self.players:
             player.hole_cards = [self.deck.deck.pop(), self.deck.deck.pop()]
         print(f"Your cards: {self.players[0].hole_cards}")
-
 
     def smallBlind(self):
         small_blind_index = (self.dealer_index + 1) % len(self.players)  # kolejny gracz od dealer'a jest dealerem  ( % przez liczbe graczy by index nie wyszedl poza liczbe graczy
@@ -67,12 +77,9 @@ class PokerGame:
         small_blind_player.balance -= sb_amount # odejmuje balance o kwote zakladu
         print(f"Current pot: {self.pot}")
 
-
-
     def bigBlind(self):   # analogiczne do small blind
         big_blind_index = (self.dealer_index + 2) % len(self.players)  # kolejny gracz po small blindzie
         big_blind_player = self.players[big_blind_index]
-
 
         if big_blind_player.username == "V":  # my sterujemy tylko 'V'
             while True:
@@ -113,23 +120,6 @@ class PokerGame:
         self.community_cards.append(card)
         print(f"Community cards: {self.community_cards}")
 
-    def get_available_actions(self, player):
-        available_actions = ["pass"]
-
-        if player.current_bet == self.current_bet:
-            available_actions.append("check")
-
-        if player.balance >= (self.current_bet - player.current_bet):
-            available_actions.append("call")
-
-        if player.balance > self.current_bet:  # gdy moze raise
-            available_actions.append("raise")
-
-        if not player.is_bot:
-            print(", ".join(available_actions))
-
-        return available_actions
-
     def negotiation(self, player):
         # jezeli gracz not is_active, to go pomijamy przy negocjacjach
         if not player.is_active:
@@ -141,57 +131,28 @@ class PokerGame:
                 print(f"Choose your action. Available actions: ", end="")
 
                 # get_available_actions() przy okazji printuje od razu (tylko dla gracza) więc nie trzeba ręcznie tego robić
-                available_actions = self.get_available_actions(player)
+                available_actions = player.get_available_actions()
 
                 action = input("Choose an action : ").lower()
 
-                if action == "pass":
-                    print(f"{player.username} passes.")
-                    time.sleep(1.5)
-                    player.is_active = False   # wyłącza nas z gry
-                    return
-
+                if action == "fold":
+                    player.fold_action()
                 elif action == "check" and "check" in available_actions:   # warunek na check
-                    print(f"{player.username} checks.")
-                    time.sleep(1.5)
-                    return
-
+                    player.check_action()
                 elif action == "call" and "call" in available_actions:
-                    call_amount = self.current_bet - player.current_bet
-                    player.balance -= call_amount
-                    player.current_bet += call_amount
-                    self.pot += call_amount
-                    print(f"{player.username} calls, adding {call_amount} to the pot.")
-                    time.sleep(1.5)
-                    return
-
+                    player.call_action()
                 elif action == "raise" and "raise" in available_actions:
-                    while True:
-                        raise_amount = input(f"How much do you want to raise? (minimum: {self.current_bet + 1}): ")
-                        if raise_amount.isnumeric():
-                            raise_amount = int(raise_amount)
-                            player.balance -= raise_amount
-                            player.current_bet += raise_amount
-                            self.pot += raise_amount
-                            self.current_bet = raise_amount
-                            print(f"{player.username} raises to {raise_amount}.")
-                            time.sleep(1.5)
-                            break
-
-                        else:
-                            print(f"Invalid raise amount.")
-
+                    player.raise_action()
                 else:
                     print("This option is not available.")
                     time.sleep(1.5)
 
         ## tu logika dla bota
-
-        else:  # Bot logic
+        else:
             print(f"{player.username}'s turn (bot).")
             time.sleep(1.5)
 
-            available_actions = self.get_available_actions(player)
+            available_actions = player.get_available_actions()
 
             # na potrzebe symulacji ustalilem losowo akcje bota
             # nie podpinalem tego do niczego bo jest to mocno "hardkorowa" wersja + nie potrafie tego zrobic na szybko
@@ -225,6 +186,8 @@ class PokerGame:
             self.negotiation(current_player)
 
     def game(self):
+        self.get_players()
+
         self.table()
         time.sleep(2)
 
@@ -271,17 +234,9 @@ class PokerGame:
         # Showdown
         print("\n === Showdown ===")
         print(f"Community cards: {self.community_cards}")
-        # potem tu winnera wyznaczy
         time.sleep(2)
-        print("The winner is : {winner_username}")
+        self.showdown()
 
-
-
-game = PokerGame([
-    Player("V", 1000, "v@v.com", 123456, 739),
-    Player("VernonRoche", 1000, "wolna@temeria.tm", 1209321, 3201, True),
-    Player("Takemura", 1000, "jebac@arasake.com", 129321, 2500, True),
-    Player("Geralt", 1000, "kaedwen@kaermorhen.blaviken", 892101, 3021, True)
-])
+game = PokerGame()
 
 game.game()
