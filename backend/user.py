@@ -1,7 +1,8 @@
 # import UI
 import json
 import time
-#from player import Player
+from player import Player
+from session import PokerSession
 #from deck import Deck
 #from game import PokerGame
 
@@ -291,7 +292,19 @@ class User:
                 print(f"7. Past games")
                 opt = input("What would you like to do? : ")
                 if opt == "1":
-                    #
+                    time.sleep(1)
+                    while True:
+                        number_of_hands = input("How many hands would you like to play? : ")
+                        if number_of_hands.isdigit():
+                            number_of_hands = int(number_of_hands)
+                            break
+
+                    #players = [
+                        #Player(cls.logged_user.username, cls.logged_user.balance, cls.logged_user.email, cls.logged_user.phone_number)
+                        #Player("VenonRoche" .. .. . . . .)
+                        #
+                #  ]
+
                     break
                 if opt == "2":
                     for i in range(3):
