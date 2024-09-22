@@ -25,7 +25,7 @@ class Hand:
             self.cards.sort()
 
     def __repr__(self):
-        return f'[{", ".join(map(str, self.cards))}]'
+        return f'{", ".join(map(str, self.cards))}'
 
     def get_values(self):
         values = []

@@ -1,7 +1,6 @@
 import uuid
 import time
 
-from player import Player
 from user import User
 
 
@@ -61,7 +60,7 @@ class PokerSession:
             "date" : self.start_time,
             "logged_user" : self.logged_user.username,
             "number_of_hands" : self.number_of_hands,
-            "players" : self.players
+            "players" : self.players,
             "winners" : self.winners,
             "losers" : self.losers,
         }

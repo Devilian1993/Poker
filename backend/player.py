@@ -1,12 +1,15 @@
-from user import User
 from hand import Hand
 import time
 
 
-class Player(User):
+class Player():
 
     def __init__(self,username, balance, email, password, phone_number, game, is_bot=False):
-        super().__init__(username, balance, email, password, phone_number)
+        self.username = username
+        self.balance = balance
+        self.email = email
+        self.password = password
+        self.phone_number = phone_number
         self.is_bot = is_bot
         self.hole_cards = []
         self.current_bet = 0

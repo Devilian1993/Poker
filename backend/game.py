@@ -2,7 +2,6 @@ from backend.hand_selector import HandSelector
 from player import Player
 from deck import Deck
 import random
-from user import User
 import time
 
 # Działanie programu.
@@ -171,6 +170,7 @@ class PokerGame:
                 action_probabilities = {"pass": 1.0}
 
     # Funkcja zwraca wygrywającą rękę tzn. najsilniejszą ręke przy kartach w grze
+    # Dodatkowo funkcja generuje rękę każdego gracza (tj. atrybut player.hand)
     def get_winning_hand(self):
         hands = []
         for player in self.players:
@@ -210,6 +210,12 @@ class PokerGame:
         winners = self.get_winner(winning_hand)
 
         print("Game is over")
+
+        for player in self.players:
+            time.sleep(1.5)
+            print(f"{player.username}'s hole cards: {", ".join(player.hole_cards)}")
+            print(f"{player.username}'s hand: {player.hand}")
+
         if len(winners) > 1:
             print(f"Game ended with a draw! Players {', '.join(winners)} won!")
             self.split_pot(winners)
