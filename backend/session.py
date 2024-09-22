@@ -2,18 +2,23 @@ import uuid
 import time
 
 from user import User
+from game import PokerGame
 
 
 class PokerSession:
-    def __init__(self, logged_user, number_of_hands, players):
+    def __init__(self, logged_user, number_of_hands, users):
         self.game_id = self.generate_game_id()  # id gry, ktore jest generowane
         self.logged_user = logged_user
         self.number_of_hands = number_of_hands
-        self.players = players  # lista graczy
+        self.users = users  # lista userów
         self.start_time = time.strftime("%Y-%m-%d %H:%M:%S")  # data rozpoczecia gry
         self.winners = None  # gracze ktorzy cos zarobili albo wyszli na zero
         self.losers = None  # gracze ktorzy stracili
         self.profit_and_loss_balance = None # bilans updatów do balance
+        # Zmienna przechowuję obecny obiekt gry/jednego rozdania
+        self.current_game = None
+        # Za każdym razem gdy tworzony jest obiekt session odpala się ta funkcja, która zaczyna sesję
+        self.start_session()
 
     # proponuje by profit_and_loss_balance był nwm tabela? słownikiem?
     # niech bedzie co jedno rozdanie aktualizwane
@@ -50,8 +55,8 @@ class PokerSession:
         print(f"Logged in player: {self.logged_user.username}")
         print(f"Number of rounds: {self.num_of_rounds}")
         print("Players in the game:")
-        for player in self.players:
-            print(f"- {player.username}")
+        for user in self.users:
+            print(f"- {user.username}")
 
     #zapisywanie info o sesji do sessions.JSON
     def save_session(self):
@@ -73,3 +78,10 @@ class PokerSession:
         with open("data.json", "w") as balance_file:
             pass
 
+    # Funkcja wywołuje rozdanie
+    def start_game(self):
+        current_game = PokerGame(self.users)
+
+    def start_session(self):
+        while True:
+            self.start_game()

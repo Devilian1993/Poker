@@ -23,7 +23,7 @@ import time
 
 class PokerGame:
 
-    def __init__(self):
+    def __init__(self, users=None):
         self.deck = Deck()
         self.players = self.get_players()
         self.community_cards = []
@@ -31,6 +31,7 @@ class PokerGame:
         self.current_bet = 0  # current bet
         self.dealer_index = None  # remember dealer index
         self.game_phase = "pre-flop"
+        self.game()
 
     # Przeniosłem pobieranie graczy do osobnego pliku, ponieważ obiekt player musi być połączony z obiektem game, więc player jest tworzony dopiero po utworzeniu gry
     # Nie robi to problemu bo player jest tworzony na potrzeby konkretnej gry na podstawie obiektu user
@@ -296,4 +297,3 @@ class PokerGame:
 
 game = PokerGame()
 
-game.game()
