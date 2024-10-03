@@ -214,7 +214,7 @@ class PokerGame:
 
         for player in self.players:
             time.sleep(1.5)
-            print(f"{player.username}'s hole cards: {", ".join(player.hole_cards)}")
+            print(f"{player.username}'s hole cards: {.join(player.hole_cards)}")
             print(f"{player.username}'s hand: {player.hand}")
 
         if len(winners) > 1:
