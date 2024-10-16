@@ -209,12 +209,13 @@ class PokerGame:
 
         winning_hand = self.get_winning_hand()
         winners = self.get_winner(winning_hand)
+        card_list_to_string = lambda card_list: [str(card) for card in card_list]
 
         print("Game is over")
 
         for player in self.players:
             time.sleep(1.5)
-            print(f"{player.username}'s hole cards: {', '.join(player.hole_cards)}")
+            print(f"{player.username}'s hole cards: {player.hole_cards}")
             print(f"{player.username}'s hand: {player.hand}")
 
         if len(winners) > 1:
