@@ -1,7 +1,6 @@
 # import UI
 import json
 import time
-from session import PokerSession
 #from deck import Deck
 #from game import PokerGame
 
