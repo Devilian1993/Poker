@@ -209,7 +209,6 @@ class PokerGame:
 
         winning_hand = self.get_winning_hand()
         winners = self.get_winner(winning_hand)
-        card_list_to_string = lambda card_list: [str(card) for card in card_list]
 
         print("Game is over")
 
